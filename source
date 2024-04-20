@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotating Image Carousel</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .carousel {
+      width: 300px;
+      height: 200px;
+      position: relative;
+      perspective: 800px; /* Adjust perspective for more spherical motion */
+    }
+
+    .slide {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+      transition: transform 1s cubic-bezier(0.2, 0, 0.2, 1); /* Faster start, smooth finish */
+    }
+
+    .slide img {
+      width: 200px; /* Adjust image size */
+      height: auto; /* Adjust image size */
+      object-fit: cover;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 1; /* Set opacity to full for all images */
+    }
+
+    /* Adjust z-index dynamically based on current index */
+    .slide:nth-child(1) { transform: rotateY(0deg) translateZ(300px); z-index: 5; }
+    .slide:nth-child(2) { transform: rotateY(72deg) translateZ(300px); z-index: 4; }
+    .slide:nth-child(3) { transform: rotateY(144deg) translateZ(300px); z-index: 3; }
+    .slide:nth-child(4) { transform: rotateY(216deg) translateZ(300px); z-index: 2; }
+    .slide:nth-child(5) { transform: rotateY(288deg) translateZ(300px); z-index: 1; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="carousel">
+      <div class="slide"><img src="https://static.wixstatic.com/media/ed8072_f5bbe26ec92248e8b20424be33afaf1d~mv2.png" alt="Slide 1"></div>
+      <div class="slide"><img src="https://static.wixstatic.com/media/ed8072_5a23a69e37214617bbb290929ad88404~mv2.png" alt="Slide 2"></div>
+      <div class="slide"><img src="https://static.wixstatic.com/media/ed8072_863a8b9ef873433b8fe1cb2232f60467~mv2.png" alt="Slide 3"></div>
+      <div class="slide"><img src="https://static.wixstatic.com/media/ed8072_ef9a66ab413b4d1980a414acf58fc574~mv2.png" alt="Slide 4"></div>
+      <div class="slide"><img src="https://static.wixstatic.com/media/ed8072_c6402e547146456bb83989170ae5a9cb~mv2.png" alt="Slide 5"></div>
+    </div>
+  </div>
+  <script>
+    let rotation = 0;
+    let currentIndex = 0;
+
+    // Rotate each slide sequentially
+    function rotateSlides() {
+      rotation -= 72;
+      currentIndex = (currentIndex + 1) % 5;
+      document.querySelectorAll('.slide').forEach((slide, index) => {
+        slide.style.transform = `rotateY(${rotation + index * 72}deg) translateZ(300px)`;
+        slide.style.zIndex = 5 - Math.abs((index - currentIndex + 5) % 5); // Adjust z-index to bring the largest image to the front
+        slide.style.opacity = index === currentIndex ? 1 : 0.5; // Reduce opacity for non-focused images
+      });
+    }
+
+    // Start rotating slides sequentially
+    setInterval(rotateSlides, 4000); // Interval set to 4000 milliseconds (4 seconds)
+    rotateSlides(); // Initial rotation to avoid waiting for the first interval
+  </script>
+</body>
+</html>
+
+
+
